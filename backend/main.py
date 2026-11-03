@@ -133,16 +133,14 @@ def _svd_compress(image_array: np.ndarray, rank: int) -> tuple[np.ndarray, int, 
 
     for channel_index in range(channels):
         matrix = image_array[:, :, channel_index].astype(np.float64)
-        k = min(retained_rank, maximum_rank - 1)
-
         try:
-            if k < maximum_rank:
+            if retained_rank < maximum_rank:
                 u, singular_values, vt = svds(
                     matrix,
-                    k=k,
+                    k=retained_rank,
                     which="LM",
                     return_singular_vectors=True,
-                    random_state=0,
+                    rng=0,
                 )
                 order = np.argsort(singular_values)[::-1]
                 u = u[:, order]
