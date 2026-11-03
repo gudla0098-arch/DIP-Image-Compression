@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/technique/:tech",
+      "destination": "/technique.html"
+    },
+    {
+      "source": "/upload/:tech",
+      "destination": "/upload.html"
+    }
+  ]
+}
