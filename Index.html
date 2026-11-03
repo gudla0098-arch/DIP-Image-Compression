@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Digital Image Processing — Explore DCT, DWT, and SVD image compression techniques with interactive demos and visual explanations.">
+  <title>IP — Digital Image Processing</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- ── Navigation ──────────────────────────────── -->
+  <header class="nav" role="banner">
+    <a class="logo" href="/" aria-label="DIP Home">IP</a>
+    <nav aria-label="Main navigation">
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#dwt">DWT</a></li>
+        <li><a href="/#dct">DCT</a></li>
+        <li><a href="/#svd">SVD</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <!-- ── Hero Section ────────────────────────────── -->
+    <section class="hero section-dark" id="home" aria-label="Hero">
+      <div class="hero-content">
+        <h1>Digital Image Processing</h1>
+        <p>
+          <span class="accent">DIP</span> (Digital Image Processing) is the process of
+          processing and analyzing digital images using mathematical techniques. It uses
+          compression techniques such as dct, dwt, and svd to reduce image size while
+          maintaining image quality and important information.
+        </p>
+        <div class="hero-pills">
+          <a href="/#dct" id="hero-dct">DCT</a>
+          <a href="/#dwt" id="hero-dwt">DWT</a>
+          <a href="/#svd" id="hero-svd">SVD</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src="/assets/hero.png" alt="Digital matrix skull representing Digital Image Processing" loading="eager">
+      </div>
+    </section>
+    <!-- ── DCT Section ──────────────────────────────── -->
+    <section class="tech-section section-light" id="dct" aria-label="Discrete Cosine Transform">
+      <div class="tech-content">
+        <h2>Discrete Cosine Transform</h2>
+        <p>
+          <span class="accent">DCT</span> (Discrete Cosine Transform) is an image compression
+          technique that converts image data from the spatial domain into the frequency domain.
+          It separates important low-frequency information from less important high-frequency
+          details and removes unnecessary data to reduce image size.
+        </p>
+        <div class="tech-actions">
+          <a href="/technique/dct" class="btn-outline" id="dct-about">About It</a>
+          <a href="/upload/dct" class="btn-outline" id="dct-project">Project</a>
+        </div>
+      </div>
+      <div class="tech-art">
+        <img src="/assets/dct.png" alt="Eye rendered in halftone dot matrix pattern representing DCT compression">
+      </div>
+    </section>
+    <!-- ── DWT Section ──────────────────────────────── -->
+    <section class="tech-section section-green reverse" id="dwt" aria-label="Discrete Wavelet Transform">
+      <div class="tech-art">
+        <img src="/assets/dwt.png" alt="Wireframe globe in hand representing DWT multi-resolution decomposition">
+      </div>
+      <div class="tech-content">
+        <h2>Discrete Wavelet Transform</h2>
+        <p>
+          <span class="accent">DWT</span> (Discrete Wavelet Transform) is an image compression
+          technique that decomposes an image into different frequency components and multiple
+          resolution levels. It separates important image information from less important
+          details to reduce file size while maintaining image quality.
+        </p>
+        <div class="tech-actions">
+          <a href="/technique/dwt" class="btn-outline" id="dwt-about">About It</a>
+          <a href="/upload/dwt" class="btn-outline" id="dwt-project">Project</a>
+        </div>
+      </div>
+    </section>
+    <!-- ── SVD Section ──────────────────────────────── -->
+    <section class="tech-section section-light" id="svd" aria-label="Singular Value Decomposition">
+      <div class="tech-content">
+        <h2>Singular Value Decomposition</h2>
+        <p>
+          <span class="accent">SVD</span> (Singular Value Decomposition) is a mathematical
+          technique that decomposes an image matrix into three matrices (u, σ, and vᵀ). It
+          compresses images by retaining the most significant singular values and removing
+          less significant information, reducing storage size while preserving image quality.
+        </p>
+        <div class="tech-actions">
+          <a href="/technique/svd" class="btn-outline" id="svd-about">About It</a>
+          <a href="/upload/svd" class="btn-outline" id="svd-project">Project</a>
+        </div>
+      </div>
+      <div class="tech-art">
+        <img src="/assets/svd.png" alt="Hands framing light portal representing SVD matrix decomposition">
+      </div>
+    </section>
+  </main>
+  <!-- ── Footer ──────────────────────────────────────── -->
+  <footer class="footer">
+    <p>© 2024 DIP — Digital Image Processing Project. DCT · DWT · SVD</p>
+  </footer>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Upload your image and compress it using DCT, DWT, or SVD. View compression metrics and download the processed result.">
+  <title id="page-title">Upload — DIP</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- ── Navigation ──────────────────────────────── -->
+  <header class="nav" role="banner">
+    <a class="logo" href="/" aria-label="DIP Home">IP</a>
+    <nav aria-label="Main navigation">
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/upload/dwt" id="nav-dwt">DWT</a></li>
+        <li><a href="/upload/dct" id="nav-dct">DCT</a></li>
+        <li><a href="/upload/svd" id="nav-svd">SVD</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="upload-page">
+    <h1 id="upload-heading"></h1>
+    <!-- ── White Panel ─────────────────────────────── -->
+    <div class="upload-panel">
+      <!-- Drop Zone -->
+      <div class="drop-zone" id="drop-zone" role="button" aria-label="Image drop zone" tabindex="0">
+        <!-- Image icon matching Figma -->
+        <svg class="drop-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="8" y="18" width="54" height="42" rx="7" fill="#d0d8f0" opacity="0.7"/>
+          <circle cx="26" cy="30" r="6" fill="#6b7fe8" opacity="0.85"/>
+          <path d="M8 46 L22 32 L34 44 L44 34 L62 50" stroke="#4a5fd4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <rect x="46" y="46" width="24" height="18" rx="9" fill="#4a5fd4" opacity="0.9"/>
+          <line x1="58" y1="50" x2="58" y2="60" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="53" y1="55" x2="63" y2="55" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <p>Drop your image here, or <span class="browse-link" id="browse-trigger">browse</span></p>
+        <small>Supports: PNG, JPG, WEBP</small>
+        <input type="file" id="file-input" accept="image/png,image/jpeg,image/webp" aria-label="Choose image file">
+      </div>
+      <!-- Selected file preview (hidden by default) -->
+      <div class="selected-preview" id="selected-preview" hidden>
+        <img id="preview-img" src="" alt="Preview of selected image">
+        <div class="file-info">
+          <div class="file-name" id="file-name"></div>
+          <div class="file-size" id="file-size"></div>
+        </div>
+        <button class="btn-remove" id="remove-btn" type="button">Remove</button>
+      </div>
+      <!-- Per-technique controls -->
+      <div class="controls-row" id="controls-row"></div>
+      <!-- Process button -->
+      <button class="btn-process" id="process-btn" disabled type="button">
+        Process Image
+      </button>
+      <!-- Status message -->
+      <p class="status-msg" id="status-msg" role="status" aria-live="polite"></p>
+    </div>
+    <!-- /upload-panel -->
+    <!-- ── Results Section ─────────────────────────── -->
+    <section class="results-section" id="results-section" hidden aria-label="Processing Results">
+      <h2>Processing Result</h2>
+      <div class="results-grid">
+        <figure class="result-card">
+          <img id="original-img" src="" alt="Original uploaded image">
+          <figcaption>Original Image</figcaption>
+        </figure>
+        <figure class="result-card">
+          <img id="processed-img" src="" alt="Compressed processed image">
+          <figcaption>Processed Image</figcaption>
+        </figure>
+      </div>
+      <div class="summary-bar" id="summary-bar" role="region" aria-label="Compression summary"></div>
+      <div class="metrics-grid" id="metrics-grid" role="list" aria-label="Compression metrics"></div>
+      <a class="btn-download" id="download-btn" href="#" download aria-label="Download processed image">
+        ⬇ Download Processed Image
+      </a>
+    </section>
+  </main>
+  <footer class="footer">
+    <p>© 2024 DIP — Digital Image Processing Project. DCT · DWT · SVD</p>
+  </footer>
+  <script src="/app.js"></script>
+</body>
+</html>
