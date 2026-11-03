@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+
   <!-- ── Navigation ──────────────────────────────── -->
   <header class="nav" role="banner">
     <a class="logo" href="/" aria-label="DIP Home">IP</a>
@@ -20,28 +21,39 @@
       </ul>
     </nav>
   </header>
+
   <!-- ── Detail Page ─────────────────────────────── -->
   <main class="detail-page" id="main-content">
+
     <h1 id="tech-title"></h1>
     <p class="tagline" id="tech-tagline"></p>
+
     <div class="detail-grid">
+
       <!-- Left column: description + steps -->
       <div class="detail-text">
         <h3>Step-By-Step Working Process</h3>
         <ol class="step-list" id="step-list"></ol>
+
         <!-- Diagram/info panel rendered per technique -->
         <div class="diagram-panel" id="diagram-panel" style="display:none;"></div>
+
         <!-- Footnotes -->
         <div id="footnotes"></div>
+
         <a class="btn-primary" id="try-link" href="#">Try this technique →</a>
       </div>
+
       <!-- Right column: flow diagram -->
       <aside class="flow-box" id="flow-box" aria-label="Processing flow diagram"></aside>
+
     </div>
   </main>
+
   <footer class="footer">
     <p>© 2024 DIP — Digital Image Processing Project. DCT · DWT · SVD</p>
   </footer>
+
   <script src="/app.js"></script>
 </body>
 </html>

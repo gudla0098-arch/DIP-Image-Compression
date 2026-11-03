@@ -3,7 +3,9 @@
    Handles: technique page rendering, upload, processing,
             results display, drag-and-drop, metrics
    ============================================================ */
+
 'use strict';
+
 /* ── Technique Data ─────────────────────────────────────────── */
 const TECH_DATA = {
   dct: {
@@ -77,6 +79,7 @@ const TECH_DATA = {
       },
     ],
   },
+
   dwt: {
     title: 'Discrete Wavelet Transform',
     titleShort: 'DWT',
@@ -146,6 +149,7 @@ const TECH_DATA = {
       },
     ],
   },
+
   svd: {
     title: 'Singular Value Decomposition',
     titleShort: 'SVD',
@@ -213,23 +217,29 @@ const TECH_DATA = {
     ],
   },
 };
+
 /* ── Router: detect current page ───────────────────────────── */
 const pathParts = location.pathname.replace(/\/$/, '').split('/').filter(Boolean);
 const pageKind   = pathParts[0];   // 'technique' | 'upload' | undefined
 const pageTech   = pathParts[1];   // 'dct' | 'dwt' | 'svd' | undefined
+
 /* ── TECHNIQUE PAGE ─────────────────────────────────────────── */
 if (pageKind === 'technique' && TECH_DATA[pageTech]) {
   initTechniquePage(pageTech);
 }
+
 function initTechniquePage(tech) {
   const d = TECH_DATA[tech];
+
   // Page metadata
   document.title          = `${d.titleShort} — Digital Image Processing`;
   const metaEl = document.getElementById('meta-desc');
   if (metaEl) metaEl.setAttribute('content', d.metaDesc);
+
   // Heading & tagline
   document.getElementById('tech-title').textContent   = d.title;
   document.getElementById('tech-tagline').textContent = d.tagline;
+
   // Step list
   const stepList = document.getElementById('step-list');
   if (stepList) {
@@ -240,6 +250,7 @@ function initTechniquePage(tech) {
       </li>
     `).join('');
   }
+
   // Flow diagram (right box)
   const flowBox = document.getElementById('flow-box');
   if (flowBox) {
@@ -256,6 +267,7 @@ function initTechniquePage(tech) {
       return `<div class="flow-step">${label}</div>`;
     }).join('');
   }
+
   // Footnotes
   const fnEl = document.getElementById('footnotes');
   if (fnEl && d.footnotes) {
@@ -265,22 +277,28 @@ function initTechniquePage(tech) {
       </p>
     `).join('');
   }
+
   // Try link
   const tryLink = document.getElementById('try-link');
   if (tryLink) tryLink.href = `/upload/${tech}`;
 }
+
 /* ── UPLOAD PAGE ────────────────────────────────────────────── */
 if (pageKind === 'upload' && TECH_DATA[pageTech]) {
   initUploadPage(pageTech);
 }
+
 function initUploadPage(tech) {
   const d = TECH_DATA[tech];
+
   // Page metadata
   document.title = `${d.titleShort} Project — DIP`;
   const heading = document.getElementById('upload-heading');
   if (heading) heading.textContent = d.title;
+
   // Build per-technique controls
   renderControls(tech);
+
   // Wire up interactions
   const dropZone     = document.getElementById('drop-zone');
   const fileInput    = document.getElementById('file-input');
@@ -293,7 +311,9 @@ function initUploadPage(tech) {
   const processBtn   = document.getElementById('process-btn');
   const statusMsg    = document.getElementById('status-msg');
   const resultsSection=document.getElementById('results-section');
+
   let currentFile = null;
+
   // ── File choose ──
   function chooseFile(file) {
     if (!file) return;
@@ -317,16 +337,20 @@ function initUploadPage(tech) {
     resultsSection.hidden = true;
     setStatus('');
   }
+
   // ── Browse trigger ──
   if (browseTrigger) browseTrigger.addEventListener('click', () => fileInput.click());
   if (dropZone)      dropZone.addEventListener('click', e => {
     if (e.target !== browseTrigger) fileInput.click();
   });
+
   // Keyboard support for drop zone
   if (dropZone) dropZone.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
   });
+
   if (fileInput) fileInput.addEventListener('change', () => chooseFile(fileInput.files[0]));
+
   // ── Drag and drop ──
   if (dropZone) {
     ['dragover', 'dragenter'].forEach(evt => dropZone.addEventListener(evt, e => {
@@ -339,6 +363,7 @@ function initUploadPage(tech) {
     }));
     dropZone.addEventListener('drop', e => chooseFile(e.dataTransfer.files[0]));
   }
+
   // ── Remove file ──
   if (removeBtn) removeBtn.addEventListener('click', () => {
     currentFile = null;
@@ -350,18 +375,22 @@ function initUploadPage(tech) {
     resultsSection.hidden = true;
     setStatus('');
   });
+
   // ── Process ──
   if (processBtn) processBtn.addEventListener('click', () => processImage(tech, currentFile));
+
   // ── Status helper ──
   function setStatus(msg, type = '') {
     statusMsg.textContent = msg;
     statusMsg.className   = 'status-msg' + (type ? ' ' + type : '');
   }
 }
+
 /* ── Render technique-specific controls ─────────────────────── */
 function renderControls(tech) {
   const row = document.getElementById('controls-row');
   if (!row) return;
+
   if (tech === 'dct') {
     row.innerHTML = `
       <div class="control-group">
@@ -375,6 +404,7 @@ function renderControls(tech) {
     const v = document.getElementById('quality-value');
     if (r && v) r.addEventListener('input', () => { v.textContent = r.value; });
   }
+
   if (tech === 'dwt') {
     row.innerHTML = `
       <div class="control-group">
@@ -398,6 +428,7 @@ function renderControls(tech) {
     const v = document.getElementById('threshold-value');
     if (r && v) r.addEventListener('input', () => { v.textContent = r.value; });
   }
+
   if (tech === 'svd') {
     row.innerHTML = `
       <div class="control-group">
@@ -408,16 +439,21 @@ function renderControls(tech) {
       </div>`;
   }
 }
+
 /* ── Process image: build FormData and POST to API ──────────── */
 async function processImage(tech, file) {
   if (!file) return;
+
   const btn       = document.getElementById('process-btn');
   const statusMsg = document.getElementById('status-msg');
+
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Processing…';
   setStatusById('status-msg', 'Sending image to server…');
+
   const fd = new FormData();
   fd.append('image', file);
+
   if (tech === 'dct') {
     fd.append('quality', document.getElementById('quality-range')?.value ?? 55);
   }
@@ -428,14 +464,18 @@ async function processImage(tech, file) {
   if (tech === 'svd') {
     fd.append('rank', document.getElementById('rank-input')?.value ?? 40);
   }
+
   try {
     const res  = await fetch(`/api/process/${tech}`, { method: 'POST', body: fd });
     const data = await res.json();
+
     if (!res.ok) {
       throw new Error(data.detail || `Server error ${res.status}`);
     }
+
     displayResults(file, data);
     setStatusById('status-msg', '✓ Image processed successfully.', 'success');
+
   } catch (err) {
     setStatusById('status-msg', `Error: ${err.message}`, 'error');
   } finally {
@@ -443,19 +483,23 @@ async function processImage(tech, file) {
     btn.innerHTML = 'Process Image';
   }
 }
+
 /* ── Display results ─────────────────────────────────────────── */
 function displayResults(originalFile, data) {
   const section = document.getElementById('results-section');
   if (!section) return;
+
   // Images
   document.getElementById('original-img').src  = URL.createObjectURL(originalFile);
   document.getElementById('original-img').alt  = 'Original: ' + originalFile.name;
   document.getElementById('processed-img').src = data.processed_url + '?t=' + Date.now();
   document.getElementById('processed-img').alt = 'Processed output';
+
   // Download link
   const dl = document.getElementById('download-btn');
   dl.href     = data.processed_url;
   dl.download = data.output_filename || 'processed.png';
+
   // Summary bar
   const m    = data.metrics;
   const saved = m.size_reduction_percent;
@@ -473,6 +517,7 @@ function displayResults(originalFile, data) {
     </span>
     <span class="summary-stat">Technique: ${data.technique.toUpperCase()}</span>
   `;
+
   // Metrics cards — curated readable set
   const metricMap = {
     original_size_kb:        { label: 'Original Size',        fmt: v => v.toFixed(1) + ' KB' },
@@ -488,8 +533,10 @@ function displayResults(originalFile, data) {
     retained_rank:           { label: 'Retained Rank',        fmt: v => v },
     maximum_rank:            { label: 'Maximum Rank',         fmt: v => v },
   };
+
   const grid = document.getElementById('metrics-grid');
   grid.innerHTML = '';
+
   for (const [key, cfg] of Object.entries(metricMap)) {
     if (m[key] === undefined) continue;
     const card = document.createElement('div');
@@ -501,16 +548,19 @@ function displayResults(originalFile, data) {
     `;
     grid.appendChild(card);
   }
+
   // Show results & scroll
   section.hidden = false;
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
 /* ── Utilities ──────────────────────────────────────────────── */
 function formatBytes(bytes) {
   if (bytes < 1024)       return bytes + ' B';
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
   return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
 }
+
 function setStatusById(id, msg, type = '') {
   const el = document.getElementById(id);
   if (!el) return;
