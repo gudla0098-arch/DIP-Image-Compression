@@ -18,25 +18,25 @@
     .wire:after{content:"";position:absolute;bottom:-13px;left:-10px;width:22px;height:42px;background:#050505;clip-path:polygon(50% 0,100% 20%,100% 84%,50% 100%,0 84%,0 20%)}
     .wire:before{content:"";position:absolute;bottom:-7px;left:-9px;width:20px;height:2px;background:#fff;z-index:1}
     .art{position:relative;width:min(900px,94vw);height:min(73vh,720px);min-height:480px;display:flex;align-items:center;justify-content:center}
-    .digits{position:absolute;top:2%;left:50%;transform:translateX(-50%);width:100%;display:flex;align-items:center;justify-content:center;gap:clamp(18px,5vw,70px);font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(210px,34vw,440px);line-height:.78;letter-spacing:-.045em;color:#ff4148;z-index:-1;user-select:none}
+    .digits{position:absolute;top:2%;left:50%;transform:translateX(-50%);width:100%;display:flex;align-items:center;justify-content:center;gap:clamp(18px,5vw,70px);font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(210px,34vw,440px);line-height:.78;letter-spacing:-.045em;color:#ff4148;z-index:-1;user-select:none;animation:digits-enter .9s cubic-bezier(.2,.8,.2,1) both}
     .digit{display:block}
     .zero{position:relative;width:.62em;height:.76em;border:.14em solid #ff4148;display:block}
     .zero:after{content:"";position:absolute;inset:0;background:#fff}
-    .hand-wrap{position:absolute;top:13%;left:50%;transform:translateX(-50%);width:min(86%,690px);height:78%;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 8px 5px #0002)}
+    .hand-wrap{position:absolute;top:13%;left:50%;transform:translateX(-50%);width:min(86%,690px);height:78%;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 8px 5px #0002);transform-origin:50% 75%;animation:hand-float 5s ease-in-out infinite}
     .hand{width:100%;height:100%;overflow:visible}
     .hand-line{fill:#fff;stroke:#242424;stroke-width:3.2;stroke-linejoin:round;stroke-linecap:round}
     .hand-detail{fill:none;stroke:#777;stroke-width:2.1;stroke-linecap:round;opacity:.7}
     .dino{position:absolute;width:82px;height:82px;left:50%;top:46%;transform:translate(-50%,-50%);image-rendering:pixelated;animation:dino-bob 1.6s ease-in-out infinite}
-    .dash{position:absolute;top:65%;left:50%;transform:translateX(-50%);width:min(290px,50vw);border-top:3px dashed #080808;border-radius:8px}
+    .dash{position:absolute;top:65%;left:50%;transform:translateX(-50%);width:min(290px,50vw);border-top:3px dashed #080808;border-radius:8px;animation:dash-in 1.2s .5s both}
     .dash:before,.dash:after{content:"";position:absolute;top:13px;width:32px;height:3px;background:#080808;border-radius:4px}
     .dash:before{left:10%}.dash:after{right:12%}
-    .caption{margin-top:-4px;text-align:center;z-index:2}
+    .caption{margin-top:-4px;text-align:center;z-index:2;animation:caption-in .8s .25s both}
     h1{font-family:'Bebas Neue','Oswald',Impact,sans-serif;font-size:clamp(48px,7vw,82px);line-height:.95;letter-spacing:.015em;margin:0;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#111}
     .home{display:inline-block;margin-top:12px;color:#050505;text-decoration:none;font-family:'Bebas Neue','Oswald',sans-serif;font-size:clamp(27px,3.4vw,42px);line-height:1;transition:transform .2s ease,opacity .2s ease}
     .home:hover{transform:translateY(-3px);opacity:.65}
     .home:focus-visible{outline:2px solid #ff4148;outline-offset:6px}
     .floating{position:absolute;width:34px;height:34px;left:39%;top:43%;animation:float-down 4.8s ease-in-out infinite;opacity:0}
-    @keyframes dino-bob{0%,100%{translate:0 0}50%{translate:0 -7px}}
+    @keyframes digits-enter{from{opacity:0;translate:0 -24px;scale:.94}to{opacity:1;translate:0 0;scale:1}}\n    @keyframes hand-float{0%,100%{translate:0 0;rotate:-1deg}50%{translate:0 -9px;rotate:1deg}}\n    @keyframes dash-in{from{opacity:0;scaleX(0)}to{opacity:1;scaleX(1)}}\n    @keyframes caption-in{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}\n    @keyframes dino-bob{0%,100%{translate:0 0}50%{translate:0 -7px}}
     @keyframes float-down{0%{transform:translateY(-30px) rotate(-25deg);opacity:0}18%{opacity:1}80%{opacity:1}100%{transform:translateY(95px) rotate(25deg);opacity:0}}
     @media(max-width:600px){
       .not-found{padding:28px 12px 44px;justify-content:center}
