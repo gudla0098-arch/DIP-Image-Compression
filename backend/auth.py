@@ -2,12 +2,17 @@
 from __future__ import annotations
 import hashlib, hmac, os, secrets
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from fastapi import APIRouter, HTTPException, Request, Response
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import DateTime, ForeignKey, String, create_engine, select, delete
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./dip_auth.db")
+# Vercel functions have a read-only application directory. Use /tmp as a
+# development fallback when DATABASE_URL is not configured. For durable
+# accounts, set DATABASE_URL to a managed PostgreSQL connection string.
+_default_db = "sqlite:////tmp/dip_auth.db" if os.getenv("VERCEL") else "sqlite:///./dip_auth.db"
+DATABASE_URL = os.getenv("DATABASE_URL", _default_db)
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
 elif DATABASE_URL.startswith("postgresql://"):
