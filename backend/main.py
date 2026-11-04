@@ -274,31 +274,24 @@ def get_processed_image(filename: str) -> FileResponse:
     return FileResponse(output_path, media_type="image/webp")
 
 
-def _authenticated_page(request: Request, page: str):
-    from backend.auth import get_authenticated_user
-    if not get_authenticated_user(request):
-        return RedirectResponse(url="/login?next=/home", status_code=303)
-    return FileResponse(ROOT_DIR / page)
-
-
 @app.get("/")
-def home_page(request: Request):
-    return _authenticated_page(request, "index.html")
+def home_page() -> FileResponse:
+    return FileResponse(ROOT_DIR / "index.html")
 
 
 @app.get("/home")
-def home_alias(request: Request):
-    return _authenticated_page(request, "index.html")
+def home_alias() -> RedirectResponse:
+    return RedirectResponse(url="/", status_code=308)
 
 
 @app.get("/technique/{technique}")
-def technique_page(technique: Literal["dct", "dwt", "svd"], request: Request):
-    return _authenticated_page(request, "technique.html")
+def technique_page(technique: Literal["dct", "dwt", "svd"]) -> FileResponse:
+    return FileResponse(ROOT_DIR / "technique.html")
 
 
 @app.get("/upload/{technique}")
-def upload_page(technique: Literal["dct", "dwt", "svd"], request: Request):
-    return _authenticated_page(request, "upload.html")
+def upload_page(technique: Literal["dct", "dwt", "svd"]) -> FileResponse:
+    return FileResponse(ROOT_DIR / "upload.html")
 
 
 @app.get("/app.js")
@@ -324,40 +317,11 @@ def frontend_asset(asset_path: str) -> FileResponse:
     return FileResponse(requested)
 
 
-# Authentication routes and pages
-from backend.auth import router as auth_router
-app.include_router(auth_router)
-
-
+# Authentication pages are retired; old bookmarks return to the public homepage.
 @app.get("/login")
-def login_page(request: Request):
-    from backend.auth import get_authenticated_user
-    if get_authenticated_user(request):
-        return RedirectResponse(url="/home", status_code=303)
-    return FileResponse(ROOT_DIR / "login.html")
-
-
 @app.get("/signin")
-def signin_page(request: Request):
-    from backend.auth import get_authenticated_user
-    if get_authenticated_user(request):
-        return RedirectResponse(url="/home", status_code=303)
-    return FileResponse(ROOT_DIR / "signin.html")
-
-
-@app.get("/auth.css")
-def auth_stylesheet() -> FileResponse:
-    return FileResponse(ROOT_DIR / "auth.css", media_type="text/css")
-
-
-@app.get("/auth.js")
-def auth_javascript() -> FileResponse:
-    return FileResponse(ROOT_DIR / "auth.js", media_type="application/javascript")
-
-
-@app.get("/database.js")
-def database_javascript() -> FileResponse:
-    return FileResponse(ROOT_DIR / "database.js", media_type="application/javascript")
+def retired_auth_pages() -> RedirectResponse:
+    return RedirectResponse(url="/", status_code=308)
 
 
 @app.get("/offline.html", include_in_schema=False)
