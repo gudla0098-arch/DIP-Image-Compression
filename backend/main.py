@@ -9,7 +9,7 @@ from typing import Literal
 import numpy as np
 import pywt
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from PIL import Image, UnidentifiedImageError
 from scipy.fft import dctn, idctn
 from scipy.sparse.linalg import svds
@@ -362,5 +362,8 @@ def service_worker() -> FileResponse:
 
 
 @app.exception_handler(404)
-async def custom_not_found(request: Request, exc: Exception) -> FileResponse:
+async def custom_not_found(request: Request, exc: Exception):
+    # Keep API errors machine-readable; render the branded page for browser routes.
+    if request.url.path.startswith("/api/"):
+        return JSONResponse(status_code=404, content={"detail": "The requested API endpoint was not found."})
     return FileResponse(ROOT_DIR / "404.html", status_code=404)
