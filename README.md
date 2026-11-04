@@ -1,85 +1,180 @@
-# DIP Image Compression
+# IP — Digital Image Processing
 
-A web application for exploring and testing three Digital Image Processing techniques:
+A web application for learning and experimenting with three image-compression techniques: **DCT**, **DWT**, and **SVD**. Upload an image, adjust technique-specific settings, process it through the FastAPI backend, and inspect compression and image-quality metrics.
 
-- **DCT** — Discrete Cosine Transform with 8×8 block transforms and coefficient quantization.
-- **DWT** — Discrete Wavelet Transform with selectable wavelets and detail-coefficient thresholding.
-- **SVD** — Singular Value Decomposition with adjustable retained rank.
+**Live website:** https://dip-image-compression.vercel.app  
+**Source code:** https://github.com/gudla0098-arch/DIP-Image-Compression
+
+---
+
+## Contents
+
+- [Features](#features)
+- [How the application works](#how-the-application-works)
+- [Project structure](#project-structure)
+- [Technology stack](#technology-stack)
+- [Run locally](#run-locally)
+- [API overview](#api-overview)
+- [Deployment](#deployment)
+- [Limits and important notes](#limits-and-important-notes)
+- [Documentation](#documentation)
+
+## Features
+
+- **DCT — Discrete Cosine Transform:** block-based 8×8 transform and coefficient quantization.
+- **DWT — Discrete Wavelet Transform:** wavelet decomposition and detail-coefficient thresholding.
+- **SVD — Singular Value Decomposition:** image reconstruction using a selected matrix rank.
+- Upload PNG, JPG/JPEG, or WEBP images.
+- Download the processed WEBP image.
+- View file-size and image-quality metrics, including compression ratio, size reduction, bytes saved, MSE, and PSNR.
+- Public pages with no sign-in requirement.
+- Custom 404 page and an offline fallback page.
+
+## How the application works
+
+1. The visitor selects DCT, DWT, or SVD.
+2. The browser opens the relevant upload page.
+3. The frontend sends the image and selected settings to the FastAPI endpoint.
+4. The backend validates the image and applies the selected transform.
+5. The processed image is encoded as WEBP and the API returns its filename, download URL, and metrics.
+6. The browser displays the result and lets the visitor download it.
 
 ## Project structure
 
+The current layout intentionally keeps the HTML pages, stylesheet, JavaScript, and assets at the repository root. The FastAPI application serves these files using explicit routes, so moving them into new folders would require coordinated route and deployment changes.
+
 ```text
 DIP-Image-Compression/
-├── assets/                 # Landing-page images and icon
+│
+├── api/
+│   └── index.py             # Vercel serverless entry point
+│
+├── assets/                  # Images and visual assets used by the website
+│
 ├── backend/
 │   ├── __init__.py
-│   └── main.py              # FastAPI server and image-processing APIs
-├── app.js                   # Frontend interactions
-├── index.html
-├── login.html
-├── signin.html
-├── auth.css
-├── auth.js
-├── technique.html
-├── upload.html
-├── styles.css
-├── requirements.txt
-├── render.yaml              # Render deployment blueprint
-├── vercel.json              # Optional frontend route rewrites
-└── README.md
+│   └── main.py              # FastAPI app, API routes, and compression logic
+│
+├── docs/
+│   ├── API.md               # API endpoints, parameters, and responses
+│   └── PROJECT_STRUCTURE.md # Guide to the folders and important files
+│
+├── 404.html                 # Branded not-found page
+├── app.js                   # Frontend interactions and API requests
+├── index.html               # Public homepage
+├── offline.html             # Offline fallback page
+├── service-worker.js        # Offline caching and service-worker behavior
+├── styles.css               # Shared website styles
+├── technique.html           # DCT, DWT, and SVD information page
+├── upload.html              # Image upload and result interface
+│
+├── .gitignore               # Files excluded from Git
+├── .python-version          # Python runtime version for deployment
+├── requirements.txt         # Python dependencies
+├── vercel.json              # Vercel configuration
+└── README.md                # Project overview and setup guide
 ```
+
+## Technology stack
+
+| Area | Technology |
+|---|---|
+| Frontend | HTML, CSS, JavaScript |
+| Backend | Python, FastAPI |
+| Image processing | Pillow, NumPy, SciPy, PyWavelets |
+| API server (local) | Uvicorn |
+| Hosting | Vercel |
 
 ## Run locally
 
-Use Python 3.11 or newer.
+### 1. Requirements
+
+- Python 3.12 (recommended; see `.python-version`)
+- Git
+
+### 2. Clone the repository
 
 ```bash
-python -m venv .venv
+git clone https://github.com/gudla0098-arch/DIP-Image-Compression.git
+cd DIP-Image-Compression
 ```
 
-Windows PowerShell:
+### 3. Create and activate a virtual environment
+
+**Windows PowerShell**
 
 ```powershell
-.venv\Scripts\Activate.ps1
+py -3.12 -m venv .venv
+.venv\\Scripts\\Activate.ps1
+```
+
+**macOS / Linux**
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+```
+
+### 4. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
 pip install -r requirements.txt
+```
+
+### 5. Start the application
+
+```bash
 uvicorn backend.main:app --reload
 ```
 
-Open http://127.0.0.1:8000.
+Open **http://127.0.0.1:8000** in your browser.
 
-## API
+Interactive API documentation is available at **http://127.0.0.1:8000/docs** while the local server is running.
 
-- `GET /api/health` — service health check.
-- `POST /api/auth/signup` — create an account and start a session.
-- `POST /api/auth/login` — verify credentials and start a session.
-- `GET /api/auth/me` — return the signed-in account.
-- `POST /api/auth/logout` — revoke the current session.
+## API overview
 
-Open `/login` to log in or `/signin` to create an account. Passwords are stored as PBKDF2-SHA256 hashes; sessions use random HttpOnly cookies and expire after 14 days.
-- `POST /api/process/dct` — multipart image upload with `quality` (10–90).
-- `POST /api/process/dwt` — multipart image upload with `wavelet` (haar, db2, sym2) and `threshold` (0–60).
-- `POST /api/process/svd` — multipart image upload with `rank` (at least 1).
-- `GET /api/result/{filename}` — retrieve the processed WebP image.
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/health` | Check whether the API is running |
+| POST | `/api/process/dct` | Compress an image using DCT |
+| POST | `/api/process/dwt` | Compress an image using DWT |
+| POST | `/api/process/svd` | Compress an image using SVD |
+| GET | `/api/result/{filename}` | Retrieve a generated WEBP result |
 
-The API response includes `processed_url`, `output_filename`, compression ratio, size reduction, bytes saved, MSE and PSNR.
+The upload field is named `image`. Technique settings are sent as multipart form fields. See **[API documentation](docs/API.md)** for parameter ranges, example requests, and response details.
 
-## Limits and notes
+## Deployment
 
-- Supported inputs: PNG, JPG/JPEG and WEBP.
-- Maximum upload size: 12 MB.
-- Maximum decoded image size: 4 million pixels to protect the processing service.
-- The output is encoded as WebP; measured file-size savings can vary with the original image and selected settings.
-- Processing results are stored temporarily on the server and may disappear after a restart or redeploy. Download results when they are ready.
-- Account data is stored in a SQL database. For local development, the app creates `dip_auth.db` (SQLite) automatically.
-- The Render Blueprint provisions a PostgreSQL database and injects its connection string into `DATABASE_URL`. For other hosts, configure `DATABASE_URL` with a PostgreSQL connection string. SQLite is intended only for local development.
-- Password reset emails are not enabled yet; the visible “Forget Password” link explains that to the user.
+This repository is configured for **Vercel**.
 
-## Deploy on Render
+1. Push your changes to the `main` branch on GitHub.
+2. In Vercel, import `gudla0098-arch/DIP-Image-Compression`.
+3. Keep the Python framework configuration and the repository's `vercel.json`.
+4. Deploy the project.
+5. After deployment, check:
+   - `/` — homepage
+   - `/technique/dct`, `/technique/dwt`, `/technique/svd` — technique pages
+   - `/upload/dct`, `/upload/dwt`, `/upload/svd` — upload pages
+   - `/api/health` — API health check
+   - `/not-a-real-page` — branded 404 behavior
 
-1. Push this repository to GitHub.
-2. In Render, choose **New → Blueprint** and select this repository.
-3. Review the web service and PostgreSQL database created from `render.yaml`, then apply the Blueprint.
-4. Wait for the deployment to finish and confirm `GET /api/health` returns `{"ok":true,...}`.
-5. Open the Render service URL. Test signup, login, logout, each compression technique, downloads, a made-up URL for the 404 page, and offline navigation after the service worker has installed.
+The Vercel entry point is `api/index.py`, which imports the FastAPI app from `backend/main.py`.
 
-The same FastAPI service serves the frontend pages and API, so relative API calls work without a separate CORS configuration. Use the Render service URL as the canonical deployment. A static Vercel deployment by itself does not run the FastAPI processing or authentication API; use the Render deployment unless you separately configure a backend proxy.
+## Limits and important notes
+
+- Supported input formats: PNG, JPG/JPEG, and WEBP.
+- Maximum upload size: **12 MB**.
+- Maximum decoded image size: **4 million pixels**.
+- Processed images are returned as WEBP files.
+- Result files are written to temporary server storage. They are not permanent and may become unavailable after a serverless instance changes, restarts, or is redeployed. Download a result as soon as it is ready.
+- Compression ratio and size reduction depend on the input image and the selected technique/settings.
+
+## Documentation
+
+- [API reference](docs/API.md)
+- [Project structure guide](docs/PROJECT_STRUCTURE.md)
+
+---
+
+Made as a Digital Image Processing project for learning, experimenting, and comparing image-compression techniques.
