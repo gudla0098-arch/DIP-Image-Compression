@@ -20,7 +20,7 @@ const signupForm=document.getElementById('signup-form');
 if(signupForm)signupForm.addEventListener('submit',event=>{
   event.preventDefault();
   if(signupForm.password.value!==signupForm['confirm-password'].value){document.getElementById('auth-message').textContent='Passwords do not match.';return;}
-  submitAuthForm(signupForm,'/api/auth/signup',{name:signupForm.name.value.trim(),email:signupForm.email.value.trim(),password:signupForm.password.value});
+  submitAuthForm(signupForm,'/api/auth/signup',{name:signupForm.elements.namedItem('name').value.trim(),email:signupForm.email.value.trim(),password:signupForm.password.value});
 });
 const forgotLink=document.getElementById('forgot-link');
 if(forgotLink)forgotLink.addEventListener('click',event=>{event.preventDefault();document.getElementById('auth-message').textContent='Password reset email is not configured yet. Please contact the website administrator.';});
