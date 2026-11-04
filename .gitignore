@@ -14,3 +14,7 @@ dist/
 build/
 uploads/
 outputs/
+# Local authentication database
+*.db
+*.sqlite
+*.sqlite3
