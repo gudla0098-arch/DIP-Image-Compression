@@ -310,3 +310,28 @@ def frontend_asset(asset_path: str) -> FileResponse:
     if not requested.is_file():
         raise HTTPException(status_code=404, detail="Asset not found.")
     return FileResponse(requested)
+
+
+# Authentication routes and pages
+from backend.auth import router as auth_router
+app.include_router(auth_router)
+
+
+@app.get("/login")
+def login_page() -> FileResponse:
+    return FileResponse(ROOT_DIR / "login.html")
+
+
+@app.get("/signin")
+def signin_page() -> FileResponse:
+    return FileResponse(ROOT_DIR / "signin.html")
+
+
+@app.get("/auth.css")
+def auth_stylesheet() -> FileResponse:
+    return FileResponse(ROOT_DIR / "auth.css", media_type="text/css")
+
+
+@app.get("/auth.js")
+def auth_javascript() -> FileResponse:
+    return FileResponse(ROOT_DIR / "auth.js", media_type="application/javascript")
