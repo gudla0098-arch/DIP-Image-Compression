@@ -567,3 +567,14 @@ function setStatusById(id, msg, type = '') {
   el.textContent = msg;
   el.className   = 'status-msg' + (type ? ' ' + type : '');
 }
+
+
+/* Register the offline fallback worker. The offline page is cached
+   before a connection is lost, so navigation can fall back to it. */
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch(error => {
+      console.warn('Offline support could not be registered:', error);
+    });
+  });
+}
