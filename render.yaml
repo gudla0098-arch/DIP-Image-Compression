@@ -11,4 +11,12 @@ services:
       - key: PYTHON_VERSION
         value: 3.11.11
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: dip-image-compression-db
+          property: connectionString
+
+databases:
+  - name: dip-image-compression-db
+    databaseName: dip_auth
+    user: dip_auth
+    plan: free
