@@ -9,7 +9,7 @@ from typing import Literal
 import numpy as np
 import pywt
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from PIL import Image, UnidentifiedImageError
 from scipy.fft import dctn, idctn
 from scipy.sparse.linalg import svds
@@ -274,19 +274,31 @@ def get_processed_image(filename: str) -> FileResponse:
     return FileResponse(output_path, media_type="image/webp")
 
 
+def _authenticated_page(request: Request, page: str):
+    from backend.auth import get_authenticated_user
+    if not get_authenticated_user(request):
+        return RedirectResponse(url="/login?next=/home", status_code=303)
+    return FileResponse(ROOT_DIR / page)
+
+
 @app.get("/")
-def home_page() -> FileResponse:
-    return FileResponse(ROOT_DIR / "index.html")
+def home_page(request: Request):
+    return _authenticated_page(request, "index.html")
+
+
+@app.get("/home")
+def home_alias(request: Request):
+    return _authenticated_page(request, "index.html")
 
 
 @app.get("/technique/{technique}")
-def technique_page(technique: Literal["dct", "dwt", "svd"]) -> FileResponse:
-    return FileResponse(ROOT_DIR / "technique.html")
+def technique_page(technique: Literal["dct", "dwt", "svd"], request: Request):
+    return _authenticated_page(request, "technique.html")
 
 
 @app.get("/upload/{technique}")
-def upload_page(technique: Literal["dct", "dwt", "svd"]) -> FileResponse:
-    return FileResponse(ROOT_DIR / "upload.html")
+def upload_page(technique: Literal["dct", "dwt", "svd"], request: Request):
+    return _authenticated_page(request, "upload.html")
 
 
 @app.get("/app.js")
@@ -318,12 +330,18 @@ app.include_router(auth_router)
 
 
 @app.get("/login")
-def login_page() -> FileResponse:
+def login_page(request: Request):
+    from backend.auth import get_authenticated_user
+    if get_authenticated_user(request):
+        return RedirectResponse(url="/home", status_code=303)
     return FileResponse(ROOT_DIR / "login.html")
 
 
 @app.get("/signin")
-def signin_page() -> FileResponse:
+def signin_page(request: Request):
+    from backend.auth import get_authenticated_user
+    if get_authenticated_user(request):
+        return RedirectResponse(url="/home", status_code=303)
     return FileResponse(ROOT_DIR / "signin.html")
 
 
