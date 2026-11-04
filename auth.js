@@ -20,8 +20,12 @@ async function submitAuthForm(form, action, payload) {
       : 'Login successful. Welcome back!';
     message.classList.add('success');
 
-    const next = new URLSearchParams(location.search).get('next');
-    const safeNext = next && next.startsWith('/') && !next.startsWith('//') ? next : '/';
+    const requestedNext = new URLSearchParams(location.search).get('next');
+    const safeNext = requestedNext && requestedNext.startsWith('/')
+      && !requestedNext.startsWith('//')
+      && requestedNext !== '/'
+      ? requestedNext
+      : '/home';
     setTimeout(() => location.assign(safeNext), 650);
     return data;
   } catch (error) {
