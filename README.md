@@ -71,14 +71,15 @@ The API response includes `processed_url`, `output_filename`, compression ratio,
 - The output is encoded as WebP; measured file-size savings can vary with the original image and selected settings.
 - Processing results are stored temporarily on the server and may disappear after a restart or redeploy. Download results when they are ready.
 - Account data is stored in a SQL database. For local development, the app creates `dip_auth.db` (SQLite) automatically.
-- For a persistent production database, set `DATABASE_URL` to a PostgreSQL connection URL in the hosting service environment. The Render blueprint includes this as a secret environment variable that you must fill in. Without it, the default SQLite database is local/ephemeral on many hosted platforms.
+- The Render Blueprint provisions a PostgreSQL database and injects its connection string into `DATABASE_URL`. For other hosts, configure `DATABASE_URL` with a PostgreSQL connection string. SQLite is intended only for local development.
 - Password reset emails are not enabled yet; the visible “Forget Password” link explains that to the user.
 
 ## Deploy on Render
 
 1. Push this repository to GitHub.
 2. In Render, choose **New → Blueprint** and select this repository.
-3. Render reads `render.yaml`, installs `requirements.txt`, and starts the FastAPI app.
-4. Wait for the `/api/health` check to pass, then open the Render service URL.
+3. Review the web service and PostgreSQL database created from `render.yaml`, then apply the Blueprint.
+4. Wait for the deployment to finish and confirm `GET /api/health` returns `{"ok":true,...}`.
+5. Open the Render service URL. Test signup, login, logout, each compression technique, downloads, a made-up URL for the 404 page, and offline navigation after the service worker has installed.
 
-The same FastAPI service serves the frontend pages and API, so relative API calls work without a separate CORS configuration. Use the Render service URL for the working authenticated site. The Vercel rewrites expose the static login and sign-in HTML routes, but a static Vercel deployment alone does not run the FastAPI authentication API; it needs an API proxy to the deployed backend.
+The same FastAPI service serves the frontend pages and API, so relative API calls work without a separate CORS configuration. Use the Render service URL as the canonical deployment. A static Vercel deployment by itself does not run the FastAPI processing or authentication API; use the Render deployment unless you separately configure a backend proxy.
