@@ -1,8 +1,4 @@
 {
-  "rewrites": [
-    { "source": "/technique/:tech", "destination": "/technique.html" },
-    { "source": "/upload/:tech", "destination": "/upload.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/signin", "destination": "/signin.html" }
-  ]
+  "framework": "python",
+  "regions": ["bom1"]
 }
