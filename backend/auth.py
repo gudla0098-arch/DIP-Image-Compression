@@ -47,7 +47,7 @@ class LoginBody(BaseModel):
 def _hash_password(password: str) -> str:
     salt = secrets.token_bytes(16)
     digest = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, PBKDF2_ROUNDS)
-    return f"pbkdf2_sha256\${PBKDF2_ROUNDS}\${salt.hex()}\${digest.hex()}"
+    return f"pbkdf2_sha256${PBKDF2_ROUNDS}${salt.hex()}${digest.hex()}"
 
 def _verify_password(password: str, encoded: str) -> bool:
     try:
