@@ -466,18 +466,27 @@ async function processImage(tech, file) {
   }
 
   try {
-    const res  = await fetch(`/api/process/${tech}`, { method: 'POST', body: fd });
-    const data = await res.json();
+    const res = await fetch(`/api/process/${tech}`, { method: 'POST', body: fd });
+    const contentType = res.headers.get('content-type') || '';
+    const data = contentType.includes('application/json')
+      ? await res.json()
+      : {};
 
     if (!res.ok) {
-      throw new Error(data.detail || `Server error ${res.status}`);
+      throw new Error(data.detail || `The server returned an unexpected response (HTTP ${res.status}). Please try again.`);
+    }
+    if (!data.processed_url || !data.metrics || !data.output_filename) {
+      throw new Error('The server response was incomplete. Please try again.');
     }
 
     displayResults(file, data);
     setStatusById('status-msg', '✓ Image processed successfully.', 'success');
 
   } catch (err) {
-    setStatusById('status-msg', `Error: ${err.message}`, 'error');
+    const message = err instanceof TypeError
+      ? 'Could not reach the server. Check your connection and try again.'
+      : err.message;
+    setStatusById('status-msg', `Error: ${message}`, 'error');
   } finally {
     btn.disabled  = false;
     btn.innerHTML = 'Process Image';
