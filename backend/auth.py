@@ -121,3 +121,10 @@ def logout(request: Request, response: Response):
             db.execute(delete(LoginSession).where(LoginSession.token_hash == digest)); db.commit()
     response.delete_cookie(COOKIE_NAME, path="/", httponly=True, samesite="lax")
     return {"ok": True}
+
+
+def get_authenticated_user(request: Request):
+    """Return the signed-in user's public profile, or None for an expired session."""
+    with SessionLocal() as db:
+        user = _current_user(request, db)
+        return _public_user(user) if user else None
