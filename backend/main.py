@@ -285,12 +285,16 @@ def home_alias() -> RedirectResponse:
 
 
 @app.get("/technique/{technique}")
-def technique_page(technique: Literal["dct", "dwt", "svd"]) -> FileResponse:
+def technique_page(technique: str):
+    if technique not in {"dct", "dwt", "svd"}:
+        raise HTTPException(status_code=404, detail="Technique not found.")
     return FileResponse(ROOT_DIR / "technique.html")
 
 
 @app.get("/upload/{technique}")
-def upload_page(technique: Literal["dct", "dwt", "svd"]) -> FileResponse:
+def upload_page(technique: str):
+    if technique not in {"dct", "dwt", "svd"}:
+        raise HTTPException(status_code=404, detail="Technique not found.")
     return FileResponse(ROOT_DIR / "upload.html")
 
 
