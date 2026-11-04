@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="robots" content="noindex">
+  <title>404 — Page Not Found | DIP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#fff;color:#050505}
+    body{font-family:'Oswald',Impact,sans-serif;overflow-x:hidden}
+    .not-found{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px 34px;isolation:isolate;overflow:hidden}
+    .wire{position:absolute;left:7.9%;top:0;width:2px;height:clamp(150px,25vh,270px);background:#171717;z-index:-1}
+    .wire:after{content:"";position:absolute;bottom:-13px;left:-10px;width:22px;height:42px;background:#050505;clip-path:polygon(50% 0,100% 20%,100% 84%,50% 100%,0 84%,0 20%)}
+    .wire:before{content:"";position:absolute;bottom:-7px;left:-9px;width:20px;height:2px;background:#fff;z-index:1}
+    .art{position:relative;width:min(900px,94vw);height:min(73vh,720px);min-height:480px;display:flex;align-items:center;justify-content:center}
+    .digits{position:absolute;top:2%;left:50%;transform:translateX(-50%);width:100%;display:flex;align-items:center;justify-content:center;gap:clamp(18px,5vw,70px);font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(210px,34vw,440px);line-height:.78;letter-spacing:-.045em;color:#ff4148;z-index:-1;user-select:none}
+    .digit{display:block}
+    .zero{position:relative;width:.62em;height:.76em;border:.14em solid #ff4148;display:block}
+    .zero:after{content:"";position:absolute;inset:0;background:#fff}
+    .hand-wrap{position:absolute;top:13%;left:50%;transform:translateX(-50%);width:min(86%,690px);height:78%;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 8px 5px #0002)}
+    .hand{width:100%;height:100%;overflow:visible}
+    .hand-line{fill:#fff;stroke:#242424;stroke-width:3.2;stroke-linejoin:round;stroke-linecap:round}
+    .hand-detail{fill:none;stroke:#777;stroke-width:2.1;stroke-linecap:round;opacity:.7}
+    .dino{position:absolute;width:82px;height:82px;left:50%;top:46%;transform:translate(-50%,-50%);image-rendering:pixelated;animation:dino-bob 1.6s ease-in-out infinite}
+    .dash{position:absolute;top:65%;left:50%;transform:translateX(-50%);width:min(290px,50vw);border-top:3px dashed #080808;border-radius:8px}
+    .dash:before,.dash:after{content:"";position:absolute;top:13px;width:32px;height:3px;background:#080808;border-radius:4px}
+    .dash:before{left:10%}.dash:after{right:12%}
+    .caption{margin-top:-4px;text-align:center;z-index:2}
+    h1{font-family:'Bebas Neue','Oswald',Impact,sans-serif;font-size:clamp(48px,7vw,82px);line-height:.95;letter-spacing:.015em;margin:0;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#111}
+    .home{display:inline-block;margin-top:12px;color:#050505;text-decoration:none;font-family:'Bebas Neue','Oswald',sans-serif;font-size:clamp(27px,3.4vw,42px);line-height:1;transition:transform .2s ease,opacity .2s ease}
+    .home:hover{transform:translateY(-3px);opacity:.65}
+    .home:focus-visible{outline:2px solid #ff4148;outline-offset:6px}
+    .floating{position:absolute;width:34px;height:34px;left:39%;top:43%;animation:float-down 4.8s ease-in-out infinite;opacity:0}
+    @keyframes dino-bob{0%,100%{translate:0 0}50%{translate:0 -7px}}
+    @keyframes float-down{0%{transform:translateY(-30px) rotate(-25deg);opacity:0}18%{opacity:1}80%{opacity:1}100%{transform:translateY(95px) rotate(25deg);opacity:0}}
+    @media(max-width:600px){
+      .not-found{padding:28px 12px 44px;justify-content:center}
+      .wire{left:8%;height:130px}
+      .art{height:58vh;min-height:360px;width:100%}
+      .digits{top:11%;font-size:clamp(155px,45vw,260px);gap:5vw}
+      .hand-wrap{top:23%;width:100%;height:67%}
+      .dino{width:58px;height:58px;top:51%}
+      .dash{top:70%}
+      .caption{margin-top:0}
+      h1{font-size:clamp(42px,11vw,62px)}
+      .home{font-size:32px}
+    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <main class="not-found" aria-labelledby="not-found-title">
+    <span class="wire" aria-hidden="true"></span>
+    <section class="art" aria-label="404 illustration">
+      <div class="digits" aria-hidden="true"><span class="digit">4</span><span class="zero"></span><span class="digit">4</span></div>
+      <div class="hand-wrap" aria-hidden="true">
+        <!-- Inline hand illustration keeps the page self-contained; replaceable with assets/404-hand.png later. -->
+        <svg class="hand" viewBox="0 0 720 590" role="img" aria-label="Illustration of an open hand">
+          <defs><radialGradient id="skin" cx="48%" cy="38%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset=".72" stop-color="#f4f4f4"/><stop offset="1" stop-color="#c9c9c9"/></radialGradient></defs>
+          <path class="hand-line" fill="url(#skin)" d="M254 552c-29-8-47-36-45-68l11-156-104-121c-20-24-17-59 7-78 23-18 55-13 76 8l91 90-56-112c-14-29-2-62 25-75 28-13 59-1 73 27l75 141-25-105c-8-32 10-62 41-69 31-7 59 12 66 43l34 137 2-77c1-32 26-55 58-53 31 2 53 28 50 59l-10 151c-3 43-19 77-50 106l-90 85c-33 31-78 49-123 49H254Z"/>
+          <path class="hand-line" fill="url(#skin)" d="M220 329c-15-24-8-56 16-71 24-14 55-7 70 17l66 108-45-155c-9-30 8-61 38-69 30-8 61 9 69 39l45 159-8-132c-2-31 22-57 53-58 31-1 57 23 58 54l7 133c2 33-9 66-31 91l-81 90c-27 30-66 47-107 47h-85c-34 0-61-28-59-62l8-130Z"/>
+          <path class="hand-detail" d="M129 146c32-15 62 7 84 35l82 104M286 90c-5 29 19 57 32 83l51 99M400 64c-8 29 5 58 15 86l34 119M550 105c-17 20-17 48-16 74l-2 87M225 352c34-18 73-14 105 7M310 414c49-18 100-13 140 13M395 476c43-11 79-30 106-58M275 290c27-13 52-12 78 2M366 254c30-14 60-12 87 5"/>
+          <path class="hand-detail" d="M236 535c30 17 68 15 98 3M468 539c25-10 47-25 65-45"/>
+        </svg>
+      </div>
+      <svg class="dino" viewBox="0 0 64 64" aria-hidden="true" shape-rendering="crispEdges">
+        <path fill="#050505" d="M38 5h20v8h-8v8h-8v8h-7v8h-7v8h-8v-8h-5V25h-5v-8h6v8h6v-8h7V9h9zM50 13h8v5h-8zM37 21h9v5h-9zM23 43h8v8h-5v8h-7v-8h-3v-8zM38 43h8v8h-4v8h-7v-8h-3v-8zM6 25h8v8H6z"/>
+        <rect x="42" y="10" width="3" height="3" fill="#fff"/>
+      </svg>
+      <span class="dash" aria-hidden="true"></span>
+      <svg class="floating" viewBox="0 0 40 40" aria-hidden="true"><path fill="#050505" d="M20 1 24 13 37 17 25 23 21 38 15 25 2 21 14 15Z"/></svg>
+    </section>
+    <div class="caption">
+      <h1 id="not-found-title">Page Not Found</h1>
+      <a class="home" href="/">Go To Home</a>
+    </div>
+  </main>
+</body>
+</html>
