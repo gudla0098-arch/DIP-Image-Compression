@@ -335,3 +335,8 @@ def auth_stylesheet() -> FileResponse:
 @app.get("/auth.js")
 def auth_javascript() -> FileResponse:
     return FileResponse(ROOT_DIR / "auth.js", media_type="application/javascript")
+
+
+@app.get("/database.js")
+def database_javascript() -> FileResponse:
+    return FileResponse(ROOT_DIR / "database.js", media_type="application/javascript")
