@@ -8,7 +8,7 @@ from typing import Literal
 
 import numpy as np
 import pywt
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from PIL import Image, UnidentifiedImageError
 from scipy.fft import dctn, idctn
@@ -340,3 +340,27 @@ def auth_javascript() -> FileResponse:
 @app.get("/database.js")
 def database_javascript() -> FileResponse:
     return FileResponse(ROOT_DIR / "database.js", media_type="application/javascript")
+
+
+@app.get("/offline.html", include_in_schema=False)
+def offline_page() -> FileResponse:
+    return FileResponse(ROOT_DIR / "offline.html")
+
+
+@app.get("/404.html", include_in_schema=False)
+def not_found_page() -> FileResponse:
+    return FileResponse(ROOT_DIR / "404.html", status_code=404)
+
+
+@app.get("/service-worker.js", include_in_schema=False)
+def service_worker() -> FileResponse:
+    return FileResponse(
+        ROOT_DIR / "service-worker.js",
+        media_type="application/javascript",
+        headers={"Service-Worker-Allowed": "/", "Cache-Control": "no-cache"},
+    )
+
+
+@app.exception_handler(404)
+async def custom_not_found(request: Request, exc: Exception) -> FileResponse:
+    return FileResponse(ROOT_DIR / "404.html", status_code=404)
