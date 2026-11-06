@@ -1,6 +1,6 @@
 # IP — Digital Image Processing
 
-A web application for learning and experimenting with **DCT**, **DWT**, and **SVD** image compression, plus **motion blur estimation and restoration**. Upload images, adjust settings, process them through FastAPI, and download results.
+A web application for learning and experimenting with three image-compression techniques: **DCT**, **DWT**, and **SVD**. Upload an image, adjust technique-specific settings, process it through the FastAPI backend, and inspect compression and image-quality metrics.
 
 **Live website:** https://dip-image-compression.vercel.app  
 **Source code:** https://github.com/gudla0098-arch/DIP-Image-Compression
@@ -27,13 +27,12 @@ A web application for learning and experimenting with **DCT**, **DWT**, and **SV
 - Upload PNG, JPG/JPEG, or WEBP images.
 - Download the processed WEBP image.
 - View file-size and image-quality metrics, including compression ratio, size reduction, bytes saved, MSE, and PSNR.
-- Motion blur restoration using selectable linear, uniform, circular, and non-uniform point-spread models with Wiener deconvolution.
 - Public pages with no sign-in requirement.
 - Custom 404 page and an offline fallback page.
 
 ## How the application works
 
-1. The visitor selects DCT, DWT, SVD, or Motion Blur Restoration.
+1. The visitor selects DCT, DWT, or SVD.
 2. The browser opens the relevant upload page.
 3. The frontend sends the image and selected settings to the FastAPI endpoint.
 4. The backend validates the image and applies the selected transform.
@@ -138,7 +137,6 @@ Interactive API documentation is available at **http://127.0.0.1:8000/docs** whi
 | Method | Endpoint | Purpose |
 |---|---|---|
 | GET | `/api/health` | Check whether the API is running |
-| POST | `/api/motion-blur` | Restore an image using a selected blur model |
 | POST | `/api/process/dct` | Compress an image using DCT |
 | POST | `/api/process/dwt` | Compress an image using DWT |
 | POST | `/api/process/svd` | Compress an image using SVD |
@@ -158,8 +156,6 @@ This repository is configured for **Vercel**.
    - `/` — homepage
    - `/technique/dct`, `/technique/dwt`, `/technique/svd` — technique pages
    - `/upload/dct`, `/upload/dwt`, `/upload/svd` — upload pages
-   - `/motion-blur` — motion blur restoration tool
-   - `/api/motion-blur` — motion blur restoration API
    - `/api/health` — API health check
    - `/not-a-real-page` — branded 404 behavior
 
@@ -173,7 +169,6 @@ The Vercel entry point is `api/index.py`, which imports the FastAPI app from `ba
 - Processed images are returned as WEBP files.
 - Result files are written to temporary server storage. They are not permanent and may become unavailable after a serverless instance changes, restarts, or is redeployed. Download a result as soon as it is ready.
 - Compression ratio and size reduction depend on the input image and the selected technique/settings.
-- Motion restoration uses a user-configured blur model as a prior and Wiener deconvolution; it is not blind estimation and cannot recover detail that is absent from the input. Circular and non-uniform PSFs are approximations.
 
 ## Documentation
 
