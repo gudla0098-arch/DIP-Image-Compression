@@ -36,7 +36,7 @@ DIP-Image-Compression/
 
 ### `backend/` — Python application
 
-`main.py` creates the FastAPI app. It validates uploaded images, runs DCT/DWT/SVD compression, calculates metrics, and serves frontend pages and generated results. `__init__.py` marks the directory as a Python package.
+`main.py` creates the FastAPI app. It validates uploaded images, runs DCT/DWT/SVD compression and motion-blur restoration, calculates metrics, and serves frontend pages and generated results. `__init__.py` marks the directory as a Python package.
 
 ### `assets/` — Website images
 
@@ -52,6 +52,9 @@ Contains images used by the homepage and technique content. Keep referenced file
 | File | Responsibility |
 |---|---|
 | `index.html` | Public homepage |
+| `motion-blur.html` | Motion blur restoration interface |
+| `motion-blur.js` | Motion blur UI and API requests |
+| `motion-blur.css` | Motion blur page styles |
 | `technique.html` | Shared DCT, DWT, and SVD information page |
 | `upload.html` | Shared upload and results interface |
 | `app.js` | Browser interactions and API calls |
