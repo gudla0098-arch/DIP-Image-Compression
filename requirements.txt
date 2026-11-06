@@ -5,6 +5,3 @@ Pillow==11.2.1
 numpy==2.2.6
 scipy==1.15.3
 PyWavelets==1.8.0
-SQLAlchemy==2.0.41
-psycopg[binary]==3.2.9
-email-validator==2.2.0
