@@ -356,7 +356,7 @@ async def custom_not_found(request: Request, exc: Exception):
 
 
 # ── Motion blur estimation and restoration ───────────────────────────────
-def _motion_kernel(kind: str, length: int, angle: float) -> np.ndarray:
+def _motion_kernel(kind: str, length: int, angle: float, size: int = 0) -> np.ndarray:
     """Build a normalized point-spread function for the selected motion model."""
     length = int(np.clip(length, 3, 45))
     radius = max(2, length // 2)
@@ -367,12 +367,11 @@ def _motion_kernel(kind: str, length: int, angle: float) -> np.ndarray:
     if kind in {"linear", "uniform"}:
         theta = np.deg2rad(angle)
         xs = np.linspace(-radius, radius, length)
-        weights = np.exp(-0.5 * (xs / max(radius / 2, 1)) ** 2) if kind == "linear" else np.ones_like(xs)
-        for x, weight in zip(xs, weights):
+        for x in xs:
             px = int(round(center + x * np.cos(theta)))
             py = int(round(center + x * np.sin(theta)))
             if 0 <= px < side and 0 <= py < side:
-                kernel[py, px] += float(weight)
+                kernel[py, px] += 1.0
     elif kind == "circular":
         # A short arc is a local approximation of rotational camera motion.
         angles = np.linspace(-np.deg2rad(min(length * 2.0, 100)), np.deg2rad(min(length * 2.0, 100)), length * 3)
@@ -429,10 +428,7 @@ def _estimate_kernel_length(image_array: np.ndarray, supplied_length: int) -> in
     """Use the user's motion-length prior; retain a safe bounded estimate."""
     # A blind estimator is ill-posed for arbitrary natural images. This estimate
     # constrains the model to the requested prior instead of pretending certainty.
-    shortest_side = min(image_array.shape[:2])
-    if shortest_side < 5:
-        raise HTTPException(status_code=422, detail="Motion restoration requires images at least 5 × 5 pixels.")
-    return int(np.clip(supplied_length, 3, min(45, shortest_side - 1)))
+    return int(np.clip(supplied_length, 3, min(45, max(3, min(image_array.shape[:2]) // 8))))
 
 
 @app.post("/api/motion-blur")
@@ -462,14 +458,18 @@ async def motion_blur_restore(
     output_name = f"motion_restored_{uuid.uuid4().hex}.webp"
     output_path = OUTPUT_DIR / output_name
     Image.fromarray(restored_array, mode="RGB").save(output_path, format="WEBP", quality=94, method=5)
+    with Image.open(output_path) as saved:
+        output_array = np.asarray(saved.convert("RGB"), dtype=np.uint8)
+    metrics = _make_metrics(original_array, output_array, len(payload), output_path.stat().st_size)
+
     return {
         "blur_type": blur_type,
-        "motion_length_px": estimated_length,
+        "estimated_length": estimated_length,
         "angle_degrees": angle,
-        "kernel_size": int(kernel.shape[0]),
+        "kernel_size": int(kernel.shape[0]),\n        "estimated_motion_px": estimated_length,
         "method": "Wiener deconvolution (known-model estimate)",
         "processed_url": f"/api/result/{output_name}",
-        "output_size_kb": round(output_path.stat().st_size / 1024, 2),
+        "metrics": metrics,
     }
 
 
