@@ -367,11 +367,12 @@ def _motion_kernel(kind: str, length: int, angle: float) -> np.ndarray:
     if kind in {"linear", "uniform"}:
         theta = np.deg2rad(angle)
         xs = np.linspace(-radius, radius, length)
-        for x in xs:
+        weights = np.exp(-0.5 * (xs / max(radius / 2, 1)) ** 2) if kind == "linear" else np.ones_like(xs)
+        for x, weight in zip(xs, weights):
             px = int(round(center + x * np.cos(theta)))
             py = int(round(center + x * np.sin(theta)))
             if 0 <= px < side and 0 <= py < side:
-                kernel[py, px] += 1.0
+                kernel[py, px] += float(weight)
     elif kind == "circular":
         # A short arc is a local approximation of rotational camera motion.
         angles = np.linspace(-np.deg2rad(min(length * 2.0, 100)), np.deg2rad(min(length * 2.0, 100)), length * 3)
