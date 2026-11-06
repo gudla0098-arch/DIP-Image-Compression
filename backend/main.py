@@ -461,8 +461,6 @@ async def motion_blur_restore(
     output_name = f"motion_restored_{uuid.uuid4().hex}.webp"
     output_path = OUTPUT_DIR / output_name
     Image.fromarray(restored_array, mode="RGB").save(output_path, format="WEBP", quality=94, method=5)
-    with Image.open(output_path) as saved:
-        output_array = np.asarray(saved.convert("RGB"), dtype=np.uint8)
     return {
         "blur_type": blur_type,
         "motion_length_px": estimated_length,
