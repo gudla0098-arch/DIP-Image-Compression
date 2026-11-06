@@ -356,7 +356,7 @@ async def custom_not_found(request: Request, exc: Exception):
 
 
 # ── Motion blur estimation and restoration ───────────────────────────────
-def _motion_kernel(kind: str, length: int, angle: float, size: int = 0) -> np.ndarray:
+def _motion_kernel(kind: str, length: int, angle: float) -> np.ndarray:
     """Build a normalized point-spread function for the selected motion model."""
     length = int(np.clip(length, 3, 45))
     radius = max(2, length // 2)
@@ -428,7 +428,10 @@ def _estimate_kernel_length(image_array: np.ndarray, supplied_length: int) -> in
     """Use the user's motion-length prior; retain a safe bounded estimate."""
     # A blind estimator is ill-posed for arbitrary natural images. This estimate
     # constrains the model to the requested prior instead of pretending certainty.
-    return int(np.clip(supplied_length, 3, min(45, max(3, min(image_array.shape[:2]) // 8))))
+    shortest_side = min(image_array.shape[:2])
+    if shortest_side < 5:
+        raise HTTPException(status_code=422, detail="Motion restoration requires images at least 5 × 5 pixels.")
+    return int(np.clip(supplied_length, 3, min(45, shortest_side - 1)))
 
 
 @app.post("/api/motion-blur")
@@ -460,16 +463,14 @@ async def motion_blur_restore(
     Image.fromarray(restored_array, mode="RGB").save(output_path, format="WEBP", quality=94, method=5)
     with Image.open(output_path) as saved:
         output_array = np.asarray(saved.convert("RGB"), dtype=np.uint8)
-    metrics = _make_metrics(original_array, output_array, len(payload), output_path.stat().st_size)
-
     return {
         "blur_type": blur_type,
-        "estimated_length": estimated_length,
+        "motion_length_px": estimated_length,
         "angle_degrees": angle,
-        "kernel_size": int(kernel.shape[0]),\n        "estimated_motion_px": estimated_length,
+        "kernel_size": int(kernel.shape[0]),
         "method": "Wiener deconvolution (known-model estimate)",
         "processed_url": f"/api/result/{output_name}",
-        "metrics": metrics,
+        "output_size_kb": round(output_path.stat().st_size / 1024, 2),
     }
 
 
