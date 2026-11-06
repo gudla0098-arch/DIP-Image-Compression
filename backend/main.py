@@ -466,7 +466,7 @@ async def motion_blur_restore(
         "blur_type": blur_type,
         "estimated_length": estimated_length,
         "angle_degrees": angle,
-        "kernel_size": int(kernel.shape[0]),
+        "kernel_size": int(kernel.shape[0]),\n        "estimated_motion_px": estimated_length,
         "method": "Wiener deconvolution (known-model estimate)",
         "processed_url": f"/api/result/{output_name}",
         "metrics": metrics,
