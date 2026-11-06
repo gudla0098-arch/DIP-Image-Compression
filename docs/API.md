@@ -130,3 +130,19 @@ Result files are stored temporarily. They may not survive a restart, redeploymen
 | 404 | API endpoint or processed result does not exist or has expired |
 
 API errors use a JSON `detail` field.
+
+
+## 6. Motion blur restoration
+
+`POST /api/motion-blur`
+
+Required multipart field: `image`. Optional fields:
+
+| Field | Type | Default | Accepted values |
+|---|---|---:|---|
+| `blur_type` | String | linear | linear, uniform, circular, non-uniform |
+| `length` | Integer | 18 | 3–45 px, limited by image dimensions |
+| `angle` | Number | 0 | 0–180 degrees |
+| `strength` | Number | 0.008 | 0.001–0.05 |
+
+The endpoint builds a point-spread function from the selected model and applies Wiener deconvolution. Motion length is a user-supplied model parameter, not an automatically inferred measurement. Circular and non-uniform models are approximations. Use the returned `processed_url` with `GET /api/result/{filename}` to download the restored WEBP.
